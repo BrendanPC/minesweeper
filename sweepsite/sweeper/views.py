@@ -99,5 +99,6 @@ def discover_tile(request, game_id):
 
 def new_game(request):
     game = Game.objects.create_game(int(request.POST['Height']), int(request.POST['Width']), int(request.POST['Mines']))
-    return display(request, game.id)
+    #return display(request, game.id)
+    return redirect('sweeper:display', game_id=game.id)
 #return redirect('sweeper.display', request=request, game_id=game.id, permanent=True)
