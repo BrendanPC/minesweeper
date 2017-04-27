@@ -1,0 +1,20 @@
+{% load static %}
+<script src="{% static 'sweeper/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'sweeper/fieldbuilder.js' %}"></script>
+<script>
+var sweeper_jsonBoard = $.parseJSON('{{ board|escapejs }}');
+var sweeper_boardWidth = {{ game.width }};
+var sweeper_boardHeight = {{ game.height }};
+console.log(sweeper_jsonBoard);
+</script>
+
+<h1>{{ game.id }}</h1>
+<ul>
+{% for tile in game.tile_set.all %}
+    <li>{{ tile }}</li>
+{% endfor %}
+</ul>
+
+{{ board }}
+
+<br><svg id="myCanvas">Your browser doesn't support inline HTML5 SVG!</svg>
