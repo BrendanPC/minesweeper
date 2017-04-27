@@ -5,7 +5,7 @@ sweeper/templates/sweeper/index.html
 {% if latest_game_list %}
     <ul>
     {% for game in latest_game_list %}
-        <li><a href="{% url 'sweeper:display' game.id %}">{{ game.id }}</a></li>
+        <li><a href="{% url 'sweeper:display' game.id %}">{{ game.id }}</a>{% if game.is_active %} - Active{% endif %}</li>
     {% endfor %}
     </ul>
 {% else %}

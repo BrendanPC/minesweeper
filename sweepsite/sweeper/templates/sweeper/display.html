@@ -18,4 +18,8 @@ var sweeper_boardHeight = {{ game.height }};
 <input type="submit" value="New Game"/>
 </form>
 
+{% if not game.is_active %}
+This game is finished.
+{% endif %}
+
 <br><div id="svgElement"></div
