@@ -6,13 +6,12 @@ var RED = '#ff0000';
 
 function initialize() {
 	var svg = SVG('svgElement').size(sweeper_boardWidth * CELL_PIXELS, sweeper_boardHeight * CELL_PIXELS);
-	
+	console.log("ee5e");
 	for(var x=0;x<sweeper_boardWidth;x++) {
 		for(var y=0;y<sweeper_boardHeight;y++) {
 			var tileContent = sweeper_jsonBoard[x][y];
 			if(tileContent == null) {
 				var currentTile = svg.rect(CELL_PIXELS,CELL_PIXELS).move(x*CELL_PIXELS,y*CELL_PIXELS).fill(GREEN1).stroke({ color: BLACK, width: 1 });
-				currentTile.minefieldX = x;
 			}
 			
 			if(tileContent == "F") {
@@ -24,7 +23,9 @@ function initialize() {
 			}
 			if($.isNumeric(tileContent)) {
 			var currentTile = svg.rect(CELL_PIXELS,CELL_PIXELS).move(x*CELL_PIXELS,y*CELL_PIXELS).fill(GREEN2).stroke({ color: BLACK, width: 1 });
-				svg.text(tileContent.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+				if(tileContent > 0 ) {
+					svg.text(tileContent.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+				}
 			}
 		}
 	}
@@ -57,41 +58,32 @@ function initialize() {
 			 url:"discover_tile/",
 			 data: {'x': x, 'y':y},
 			 success: function(response){
-					 sweeper_jsonBoard[x][y] = response;
+					 sweeper_jsonBoard[x][y] = parseInt(response);
 					 if($.isNumeric(response)) {
-						evt.target.setAttribute('fill', GREEN2);
-						svg.text(response.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+						if(response < 9) {
+							evt.target.setAttribute('fill', GREEN2);
+							svg.text(response.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+						}
+						else {
+							evt.target.setAttribute('fill', RED);
+						}
+					 }
+					 else {
+						var tiles = $.parseJSON(response);
+						console.log(tiles);
+						for(var i=0;i<tiles.length;i++) {
+							sweeper_jsonBoard[tiles[i].x][tiles[i].y] = tiles[i].adj;
+							var svgTile = $('#svgElement').find("[x='" + tiles[i].x*CELL_PIXELS + "'][y='" + tiles[i].y*CELL_PIXELS + "']");
+							svgTile[0].setAttribute('fill', GREEN2);
+							if(tiles[i].adj > 0) {
+								svg.text(tiles[i].adj.toString()).move(tiles[i].x*CELL_PIXELS,tiles[i].y*CELL_PIXELS);
+							}
+						}
 					 }
 			 }
     });
 		
 	});
-	
-/*
-	var canvas = $('#myCanvas')[0];
-	var ctx = canvas.getContext('2d');
-	ctx.textAlign="center"; 
-	ctx.textBaseline="middle";
-	canvas.width = sweeper_boardWidth * CELL_PIXELS;
-	canvas.height = sweeper_boardHeight * CELL_PIXELS;
-	
-	for(var x=0;x<sweeper_boardWidth;x++) {
-		for(var y=0;y<sweeper_boardHeight;y++) {
-			ctx.rect(x*CELL_PIXELS,y*CELL_PIXELS,CELL_PIXELS,CELL_PIXELS);
-			var tileContent = sweeper_jsonBoard[x][y];
-			if(tileContent == "F") {
-				ctx.fillText(tileContent, x*CELL_PIXELS+CELL_PIXELS/2,y*CELL_PIXELS+CELL_PIXELS/2);
-			}
-			if(tileContent == "M") {
-				ctx.fillText(tileContent, x*CELL_PIXELS+CELL_PIXELS/2,y*CELL_PIXELS+CELL_PIXELS/2);
-			}
-			if($.isNumeric(tileContent)) {
-				ctx.fillText(tileContent, x*CELL_PIXELS+CELL_PIXELS/2,y*CELL_PIXELS+CELL_PIXELS/2);
-			}
-		}
-	}
-	ctx.stroke();
-	*/
 }
 
 $(function() {initialize()});

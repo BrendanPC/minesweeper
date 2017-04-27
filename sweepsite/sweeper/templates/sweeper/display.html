@@ -6,16 +6,8 @@
 var sweeper_jsonBoard = $.parseJSON('{{ board|escapejs }}');
 var sweeper_boardWidth = {{ game.width }};
 var sweeper_boardHeight = {{ game.height }};
-console.log(sweeper_jsonBoard);
 </script>
 
-<h1>{{ game.id }}</h1>
-<ul>
-{% for tile in game.tile_set.all %}
-    <li>{{ tile }}</li>
-{% endfor %}
-</ul>
-
-{{ board }}
+<h1>Game #{{ game.id }}</h1>
 
 <br><div id="svgElement"></div

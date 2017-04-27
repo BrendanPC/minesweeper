@@ -32,9 +32,28 @@ def display(request, game_id):
     
     return render(request, 'sweeper/display.html', {'game': game, 'board': json.dumps(board)})
 
-def get_adjacent_empties(game,x,y):
-    tiles = game.tile_set.filter(Q(is_flagged=False) & Q(is_mined=False) & Q(is_visible=False))
-    #TODO find the tiles
+def get_adjacent_empties(game,base_tile):
+    tiles = list(game.tile_set.filter(Q(is_flagged=False) & Q(is_mined=False) & Q(is_visible=False)))
+    search_list = [base_tile]
+    found_list = [base_tile]
+    tiles.remove(base_tile)
+    
+    while len(search_list) > 0:
+        current_tile = search_list.pop()
+        for tile in tiles[:]:
+            if abs(tile.x - current_tile.x) <= 1 and abs(tile.y - current_tile.y) <= 1:
+                found_list.append(tile)
+                tiles.remove(tile)
+                if tile.adjacent_mines == 0:
+                    search_list.append(tile)
+    # make json friendly                
+    final_list = []
+    for tile in found_list:
+        tile.is_visible = True
+        tile.save()
+        final_list.append({'x':tile.x, 'y':tile.y, 'adj':tile.adjacent_mines})
+    return final_list
+            
 
 def discover_tile(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
@@ -50,10 +69,15 @@ def discover_tile(request, game_id):
     
     #TODO modify db
     if tile.is_mined:
-        response = "!"
+        response = 9
+        tile.is_visible = True
+        tile.save()
+        game.is_active = False
+        game.save()
     elif tile.adjacent_mines == 0:
-        response=get_adjacent_empties(game,x,y)
-        response=0
+        response=json.dumps(get_adjacent_empties(game,tile))
     else:
         response = tile.adjacent_mines
+        tile.is_visible = True
+        tile.save()
     return HttpResponse(response)
