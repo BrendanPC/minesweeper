@@ -3,10 +3,11 @@ import random
 
 class GameManager(models.Manager):
     def build_minefield(self,height,width,mines):
-        if mines >= height*width:
-            mines = height*width - 1 # need one unmined square for the game to make sense
+        if mines >= height*width or mines < 1:
+            mines = height*width // 3
         board = [ [0] * height for _ in range(width)]
         mines_placed = 0
+        #TODO this is pretty inefficient - could be sped up with random.choose
         while mines_placed < mines:
             x = random.randint(0,width-1)
             y = random.randint(0,height-1)
@@ -31,6 +32,7 @@ class GameManager(models.Manager):
                     to_be_mined = True
                     adjacent_mines -= 9
                 t = Tile(x=x,y=y,game=game,adjacent_mines=adjacent_mines,is_mined=to_be_mined)
+                #TODO also slow
                 t.save()
         return game
 

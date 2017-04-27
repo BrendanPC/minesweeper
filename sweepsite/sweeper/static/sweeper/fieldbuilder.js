@@ -6,7 +6,6 @@ var RED = '#ff0000';
 
 function initialize() {
 	var svg = SVG('svgElement').size(sweeper_boardWidth * CELL_PIXELS, sweeper_boardHeight * CELL_PIXELS);
-	console.log("ee5e");
 	for(var x=0;x<sweeper_boardWidth;x++) {
 		for(var y=0;y<sweeper_boardHeight;y++) {
 			var tileContent = sweeper_jsonBoard[x][y];

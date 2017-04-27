@@ -23,7 +23,9 @@ function initialize() {
 			}
 			if($.isNumeric(tileContent)) {
 			var currentTile = svg.rect(CELL_PIXELS,CELL_PIXELS).move(x*CELL_PIXELS,y*CELL_PIXELS).fill(GREEN2).stroke({ color: BLACK, width: 1 });
-				svg.text(tileContent.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+				if(tileContent > 0 ) {
+					svg.text(tileContent.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+				}
 			}
 		}
 	}
