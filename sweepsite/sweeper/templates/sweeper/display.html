@@ -1,5 +1,6 @@
 {% load static %}
 <script src="{% static 'sweeper/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'sweeper/svg.min.js' %}"></script>
 <script src="{% static 'sweeper/fieldbuilder.js' %}"></script>
 <script>
 var sweeper_jsonBoard = $.parseJSON('{{ board|escapejs }}');
@@ -17,4 +18,4 @@ console.log(sweeper_jsonBoard);
 
 {{ board }}
 
-<br><svg id="myCanvas">Your browser doesn't support inline HTML5 SVG!</svg>
+<br><div id="svgElement"></div

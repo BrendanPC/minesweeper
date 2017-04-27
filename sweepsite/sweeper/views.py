@@ -31,3 +31,29 @@ def display(request, game_id):
                 board[tile.x][tile.y] = tile.adjacent_mines
     
     return render(request, 'sweeper/display.html', {'game': game, 'board': json.dumps(board)})
+
+def get_adjacent_empties(game,x,y):
+    tiles = game.tile_set.filter(Q(is_flagged=False) & Q(is_mined=False) & Q(is_visible=False))
+    #TODO find the tiles
+
+def discover_tile(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    x, y = request.GET.get('x'), request.GET.get('y')
+    if not x in range(game.width) and y in range(game.height):
+        return HttpResponse(status=500)
+    
+    tile = game.tile_set.filter(Q(x=x) & Q(y=y))
+    if len(tile) == 1:
+        tile = tile[0]
+    else:
+        return HttpResponse(status=500)
+    
+    #TODO modify db
+    if tile.is_mined:
+        response = "!"
+    elif tile.adjacent_mines == 0:
+        response=get_adjacent_empties(game,x,y)
+        response=0
+    else:
+        response = tile.adjacent_mines
+    return HttpResponse(response)
