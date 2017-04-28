@@ -1,5 +1,5 @@
 var CELL_PIXELS = 25;
-var TEXT_VERTICAL_OFFSET = CELL_PIXELS / 2 - 6;
+var TEXT_VERTICAL_OFFSET = CELL_PIXELS / 2 - 8;
 var GREEN1 = '#339933';
 var GREEN2 = '#ccff99';
 var PURPLE = '#8342f4';
@@ -77,14 +77,16 @@ function initialize() {
 			 url:"discover_tile/",
 			 data: {'x': x, 'y':y},
 			 success: function(response){
-					 sweeper_jsonBoard[x][y] = parseInt(response);
+					 
 					 if($.isNumeric(response)) {
 						if(response < 9) {
+							sweeper_jsonBoard[x][y] = parseInt(response);
 							evt.target.setAttribute('fill', GREEN2);
-							svg.text(response.toString()).move(x*CELL_PIXELS,y*CELL_PIXELS);
+							drawText(svg, x, y, response);
 						}
 						else {
 							evt.target.setAttribute('fill', RED);
+							sweeper_jsonBoard[x][y] = "M";
 						}
 					 }
 					 else {
@@ -95,7 +97,7 @@ function initialize() {
 							var svgTile = $('#svgElement').find("[x='" + tiles[i].x*CELL_PIXELS + "'][y='" + tiles[i].y*CELL_PIXELS + "']");
 							svgTile[0].setAttribute('fill', GREEN2);
 							if(tiles[i].adj > 0) {
-								svg.text(tiles[i].adj.toString()).move(tiles[i].x*CELL_PIXELS,tiles[i].y*CELL_PIXELS);
+								drawText(svg, tiles[i].x, tiles[i].y, tiles[i].adj);
 							}
 						}
 					 }
