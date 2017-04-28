@@ -44,6 +44,9 @@ function initialize() {
 	}
 	
 	svg.mouseover(function(evt){
+		if(evt.target.nodeName !== "rect") {
+			return true;
+		}
 		var x = evt.target.getAttribute('x') / CELL_PIXELS;
 		var y = evt.target.getAttribute('y') / CELL_PIXELS;
 		if(sweeper_jsonBoard[x][y] === null) {
@@ -52,6 +55,9 @@ function initialize() {
 	});
 	
 	svg.mouseout(function(evt){
+		if(evt.target.nodeName !== "rect") {
+			return true;
+		}
 		var x = evt.target.getAttribute('x') / CELL_PIXELS;
 		var y = evt.target.getAttribute('y') / CELL_PIXELS;
 		if(sweeper_jsonBoard[x][y] === null) {
@@ -60,6 +66,9 @@ function initialize() {
 	});
 	
 	svg.click(function(evt){
+		if(evt.target.nodeName !== "rect") {
+			return true;
+		}
 		var x = evt.target.getAttribute('x') / CELL_PIXELS;
 		var y = evt.target.getAttribute('y') / CELL_PIXELS;
 		
