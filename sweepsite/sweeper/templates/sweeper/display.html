@@ -3,6 +3,7 @@
 <script src="{% static 'sweeper/svg.min.js' %}"></script>
 <script src="{% static 'sweeper/fieldbuilder.js' %}"></script>
 <script>
+var sweeper_csrf_token = "{{ csrf_token }}";
 var sweeper_jsonBoard = $.parseJSON('{{ board|escapejs }}');
 var sweeper_boardWidth = {{ game.width }};
 var sweeper_boardHeight = {{ game.height }};

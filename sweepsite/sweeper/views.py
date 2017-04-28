@@ -99,6 +99,17 @@ def discover_tile(request, game_id):
 
 def new_game(request):
     game = Game.objects.create_game(int(request.POST['Height']), int(request.POST['Width']), int(request.POST['Mines']))
-    #return display(request, game.id)
     return redirect('sweeper:display', game_id=game.id)
-#return redirect('sweeper.display', request=request, game_id=game.id, permanent=True)
+
+def toggle_flag(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    x, y = request.POST['x'], request.POST['y']
+    tile = game.tile_set.filter(Q(x=x) & Q(y=y))
+    if len(tile) == 1:
+        tile = tile[0]
+    else:
+        return HttpResponse(status=500)
+    
+    tile.is_flagged = not tile.is_flagged
+    tile.save()
+    return HttpResponse(status=204)
